@@ -200,9 +200,9 @@ class UserController extends Controller
             $user->update();
             Alert::success('Password berhasil diubah!', 'Sukses');
             return redirect()->route('user.index');
-        } else {
+        }
+        else {
             return redirect()->route('user.reset', $id)->with('error', 'Password lama anda salah!');
         }
-        return $user;
     }
 }

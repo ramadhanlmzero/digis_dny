@@ -108,13 +108,13 @@
                                 <td>{{ $distributor->distributor->address }}</td>
                                 <td>
                                     <div class="btn-group">
-                                        <a href="" class="btn btn-warning px-2 py-1">
+                                        <a href="{{ route('user.reset', $distributor->id) }}" class="btn btn-warning px-2 py-1">
                                             <i class="la la-key"></i>
                                         </a>
-                                        <a href="" class="btn btn-success px-2 py-1 mx-2">
+                                        <a href="{{ route('user.edit', $distributor->id) }}" class="btn btn-success px-2 py-1 mx-2">
                                             <i class="la la-pencil-square"></i>
                                         </a>
-                                        <form action="" method="post">
+                                        <form action="{{ route('user.destroy', $distributor->id) }}" method="post">
                                         {{ csrf_field() }}
                                         {{ method_field('delete') }}
                                             <button class="btn btn-danger px-2 py-1" onclick="return confirm('Anda yakin ingin menghapus data ini?')"> 
