@@ -16,7 +16,13 @@ class Place extends Model
     use SpatialTrait;
 
     protected $table = 'place';
-    protected $guarded = [];
+    protected $fillable = [
+        'id', 'city', 'coordinate'
+    ];
+
+    protected $spatialFields = [
+        'coordinate'
+    ];
 
     public $incrementing = false;
 

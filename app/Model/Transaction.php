@@ -12,7 +12,7 @@ class Transaction extends Model
 
     public $incrementing = false;
     
-    public function user()
+    public function distributor()
     {
         return $this->belongsTo(Distributor::class, 'distributor_id', 'id');
     }

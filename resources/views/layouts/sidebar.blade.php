@@ -38,25 +38,31 @@
     </div>
     <ul class="nav">
         <li class="nav-item {{ setActive(['dashboard']) }}">
-            <a href="index.html">
+            <a href="{{ route('dashboard') }}">
                 <i class="la la-dashboard"></i>
                 <p>Dashboard</p>
             </a>
         </li>
         <li class="nav-item {{ setActive(['transaction*']) }}">
-            <a href="components.html">
+            <a href="{{ route('transaction.index') }}">
                 <i class="la la-comment"></i>
                 <p>Riwayat Transaksi</p>
             </a>
         </li>
         <li class="nav-item {{ setActive(['product*']) }}">
-            <a href="components.html">
+            <a href="{{ route('product.index') }}">
                 <i class="la la-cube"></i>
                 <p>Data Produk</p>
             </a>
         </li>
+        <li class="nav-item {{ setActive(['place*']) }}">
+            <a href="{{ route('place.index') }}">
+                <i class="la la-cube"></i>
+                <p>Data Kota Distributor</p>
+            </a>
+        </li>
         <li class="nav-item {{ setActive(['user*']) }}">
-            <a href="components.html">
+            <a href="{{ route('user.index') }}">
                 <i class="la la-user"></i>
                 <p>Data User</p>
             </a>
