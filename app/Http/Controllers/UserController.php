@@ -159,9 +159,6 @@ class UserController extends Controller
             $photo_name = "user_" . $name . '.' . $photo->getClientOriginalExtension();
             $photo->storeAs('public/user/', $photo_name);
             $data['photo'] = (string) $photo_name;
-        } 
-        else {
-            $data['photo'] = null;
         }
         $user->update($data);
 

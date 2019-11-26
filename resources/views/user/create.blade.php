@@ -55,7 +55,7 @@
                     <div class="form-group pb-0">
                         <label for="photo">Foto Profil</label>
                     </div>
-                    <div class="form-group @error('name') has-error @enderror pt-0">
+                    <div class="form-group @error('photo') has-error @enderror pt-0">
                         <img id="preview" height="150" width="150" src="{{ asset('assets/images/nopic.jpg') }}">
                         <input type="file" class="form-control mt-2" id="photo" name="photo" onchange="readURL(this);">
                         @error('photo')

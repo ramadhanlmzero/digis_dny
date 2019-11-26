@@ -110,7 +110,7 @@
                     <div class="form-group pb-0">
                         <label for="photo">Foto Profil</label>
                     </div>
-                    <div class="form-group @error('name') has-error @enderror pt-0">
+                    <div class="form-group @error('photo') has-error @enderror pt-0">
                         @if($user->photo)
                             @if(file_exists(public_path(). '/storage/user/'. $user->photo))
                                 <img id="preview" height="150" width="150" src="{{asset('storage/user/'. $user->photo)}}">
