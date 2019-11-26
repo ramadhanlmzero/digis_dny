@@ -42,9 +42,46 @@
                         @enderror
                     </div>
                     @if ($user->role == 'Distributor')
+                        <div class="form-group @error('place_id') has-error @enderror">
+                            <label for="place_id">Asal Kota</label>
+                            <select class="form-control" id="place_id" name="place_id">
+                                @if ($user->distributor->place_id)
+                                <option value="{{ $user->distributor->place_id }}" selected>{{ $user->distributor->place->city }}</option>
+                                @endif
+                                @foreach ($places as $place)
+                                    @if ($user->distributor->place_id != $place->id)
+                                    <option value="{{ $place->id }}">{{ $place->city }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            @error('place_id')
+                                <span class="form-text text-danger">
+                                    {{ $message }}
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-group @error('gender') has-error @enderror">
+                            <label for="gender">Jenis Kelamin</label>
+                            <select class="form-control" id="gender" name="gender">
+                                @if ($user->distributor->gender)
+                                <option value="{{ $user->distributor->gender }}" selected>{{ $user->distributor->gender }}</option>
+                                @endif
+                                @if ($user->distributor->gender != 'Laki-laki')
+                                <option value="Laki-laki">Laki-laki</option>
+                                @endif
+                                @if ($user->distributor->gender != 'Perempuan')
+                                <option value="Perempuan">Perempuan</option>
+                                @endif
+                            </select>
+                            @error('gender')
+                                <span class="form-text text-danger">
+                                    {{ $message }}
+                                </span>
+                            @enderror
+                        </div>
                         <div class="form-group @error('phone') has-error @enderror">
                             <label for="phone">No. Telp</label>
-                            <input type="tel" class="form-control" name="phone" id="phone" value="{{ $user->phone }}" pattern="^08[0-9]{9,}$" maxlength="12" required>
+                            <input type="tel" class="form-control" name="phone" id="phone" value="{{ $user->distributor->phone }}" pattern="^08[0-9]{9,}$" maxlength="12" required>
                             @error('phone')
                                 <span class="form-text text-danger">
                                     {{ $message }}
@@ -53,8 +90,17 @@
                         </div>
                         <div class="form-group @error('address') has-error @enderror">
                             <label for="address">Alamat Lengkap</label>
-                            <textarea name="address" id="address" cols="30" rows="5" class="form-control">{{ $user->address }}</textarea>
+                            <textarea name="address" id="address" cols="30" rows="5" class="form-control" required>{{ $user->distributor->address }}</textarea>
                             @error('address')
+                                <span class="form-text text-danger">
+                                    {{ $message }}
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-group @error('capacity') has-error @enderror">
+                            <label for="capacity">Target Penjualan</label>
+                            <input type="number" class="form-control" name="capacity" id="capacity" value="{{ $user->distributor->capacity }}" required>
+                            @error('capacity')
                                 <span class="form-text text-danger">
                                     {{ $message }}
                                 </span>

@@ -9,6 +9,7 @@ use Alert;
 use Carbon\Carbon;
 use App\User;
 use App\Model\Distributor;
+use App\Model\Place;
 
 class UserController extends Controller
 {
@@ -112,7 +113,8 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-        return view('user.edit', compact('user'));
+        $places = Place::all();
+        return view('user.edit', compact('user', 'places'));
     }
 
     /**
@@ -162,6 +164,19 @@ class UserController extends Controller
             $data['photo'] = null;
         }
         $user->update($data);
+
+        if ($request->role == 'Distributor') {
+            $distributor_get = Distributor::where('user_id', $user->id)->first();
+            $distributor = Distributor::find($distributor_get->id);
+            $data2 = [
+                'gender' => $request->gender,
+                'phone' => $request->phone,
+                'address' => $request->address,
+                'place_id' => $request->place_id,
+                'capacity' => $request->capacity
+            ];
+            $distributor->update($data2);
+        }
 
         Alert::success('Data berhasil diubah!', 'Sukses');
         return redirect()->route('user.index');

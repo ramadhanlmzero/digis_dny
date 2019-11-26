@@ -25,7 +25,7 @@
                             <th width="40">Foto</th>
                             <th>Nama</th>
                             <th>Email</th>
-                            <th width="130">Aksi</th>
+                            <th width="100">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -82,9 +82,9 @@
                             <th width="40">Foto</th>
                             <th>Nama</th>
                             <th>Email</th>
-                            <th>No. Telp</th>
-                            <th>Alamat</th>
-                            <th width="130">Aksi</th>
+                            <th>Asal Kota</th>
+                            <th>Target Penjualan</th>
+                            <th width="150">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -104,10 +104,19 @@
                                 </td>
                                 <td>{{ $distributor->name }}</td>
                                 <td>{{ $distributor->email }}</td>
-                                <td>{{ $distributor->distributor->phone }}</td>
-                                <td>{{ $distributor->distributor->address }}</td>
+                                <td>
+                                    @if ( $distributor->distributor->place_id)
+                                    {{ $distributor->distributor->place->city }}
+                                    @else
+                                      
+                                    @endif
+                                </td>
+                                <td>{{ $distributor->distributor->capacity }}</td>
                                 <td>
                                     <div class="btn-group">
+                                        <a href="{{ route('user.show', $distributor->id) }}" class="btn btn-primary px-2 py-1 mr-2">
+                                            <i class="la la-eye"></i>
+                                        </a>
                                         <a href="{{ route('user.reset', $distributor->id) }}" class="btn btn-warning px-2 py-1">
                                             <i class="la la-key"></i>
                                         </a>
