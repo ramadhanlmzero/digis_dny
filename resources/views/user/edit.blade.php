@@ -34,13 +34,33 @@
                     </div>
                     <div class="form-group @error('role') has-error @enderror">
                         <label for="role">Hak Akses</label>
-                        <input type="text" class="form-control" name="role" id="role" value="{{ $user->role }}" readonly>
+                        <input type="text" class="form-control" name="role" id="role" value="{{ $user->role }}" readonly required>
                         @error('role')
                             <span class="form-text text-danger">
                                 {{ $message }}
                             </span>
                         @enderror
                     </div>
+                    @if ($user->role == 'Distributor')
+                        <div class="form-group @error('phone') has-error @enderror">
+                            <label for="phone">No. Telp</label>
+                            <input type="tel" class="form-control" name="phone" id="phone" value="{{ $user->phone }}" pattern="^08[0-9]{9,}$" maxlength="12" required>
+                            @error('phone')
+                                <span class="form-text text-danger">
+                                    {{ $message }}
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-group @error('address') has-error @enderror">
+                            <label for="address">Alamat Lengkap</label>
+                            <textarea name="address" id="address" cols="30" rows="5" class="form-control">{{ $user->address }}</textarea>
+                            @error('address')
+                                <span class="form-text text-danger">
+                                    {{ $message }}
+                                </span>
+                            @enderror
+                        </div>
+                    @endif
                     <div class="form-group pb-0">
                         <label for="photo">Foto Profil</label>
                     </div>

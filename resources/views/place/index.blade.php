@@ -57,6 +57,18 @@
             </div>
         </div>
     </div>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Sebaran Distributor di Jawa Timur</div>
+            </div>
+            <div class="card-body">
+                <div style="width: 100%; height: 350px;">
+                    {!! Mapper::render() !!}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 

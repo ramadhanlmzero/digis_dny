@@ -50,7 +50,7 @@
     </div>
     <div class="col-md-7 stretch-card">
         <div class="card text-center">
-            <div style="width: 600px; height: 350px;">
+            <div style="width: 100%; height: 470px;">
                 {!! Mapper::render() !!}
             </div>
         </div>

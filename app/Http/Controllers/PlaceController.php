@@ -20,6 +20,19 @@ class PlaceController extends Controller
     public function index()
     {
         $places = Place::orderBy('updated_at', 'DESC')->get();
+        Mapper::location('Jawa Timur')->map(
+        [
+            'zoom' => 8, 
+            'center' => true, 
+            'marker' => false
+        ]);
+        foreach ($places as $index => $place) {
+            $content = $place->city . "<br>Jumlah Distributor: " . $place->distributor->count() . "<br><br><a href='/dashboard/place/" . $place->id . "' class='btn btn-primary px-2 py-1'>Lihat Detail</a>";
+            Mapper::informationWindow($place->coordinate->getLat(), $place->coordinate->getLng(), $content, 
+            [ 
+                'maxWidth' => 600,
+            ]);
+        }
         return view('place.index', compact('places'));
     }
 
@@ -36,10 +49,15 @@ class PlaceController extends Controller
             'center' => true, 
             'marker' => false
         ]);
-        Mapper::marker(-7.2754438, 112.6426426, 
+        Mapper::informationWindow(-7.2754438, 112.6426426, 'Geser marker ini!', 
         [
-            'draggable' => true, 
-            'eventDrag' => 'document.getElementById("lat").value = event.latLng.lat();document.getElementById("long").value = event.latLng.lng();'
+            'open' => true, 
+            'maxWidth' => 300, 
+            'markers' => [
+                'title' => 'Title',
+                'draggable' => true,
+                'eventDrag' => 'document.getElementById("lat").value = event.latLng.lat();document.getElementById("long").value = event.latLng.lng();'
+            ]
         ]);
         return view('place.create');
     }
