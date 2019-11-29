@@ -28,6 +28,6 @@ class Place extends Model
 
     public function distributor()
     {
-        return $this->hasMany(Distributor::class, 'id', 'user_id');
+        return $this->hasMany(Distributor::class, 'place_id', 'id');
     }
 }

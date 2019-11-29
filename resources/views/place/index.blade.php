@@ -77,6 +77,7 @@
 @endsection
 
 @section('js')
+    <script src="{{asset('jatim.geojson')}}" type="text/javascript"></script>
     <script src="{{ asset('assets/js/plugin/datatable/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugin/datatable/dataTables.bootstrap4.min.js') }}"></script>
     <script>
@@ -96,6 +97,50 @@
                 },
                 stateSave: true
             });
+            function initMap() {
+                var places = {!! json_encode($places->toArray(), JSON_HEX_TAG) !!};
+                var geo = maps[0].map.data;
+                geo.addGeoJson(jatim);
+                geo.setStyle(function(feature) {  
+                    var KABKOT = feature.getProperty('KABKOT');
+                    var color = "gray";
+                    places.forEach(element => {
+                        if (element.distributor.length > 0) {
+                            if (KABKOT == element.city) {
+                                color = "yellow";
+                            }
+                        }
+                        if (element.distributor.length < 1) {
+                            if (KABKOT == element.city) {
+                                color = "red";
+                            }
+                        }
+                    });
+                    return {
+                        fillColor: color,
+                        strokeWeight: 1
+                    }
+                });
+                var infowindow = new google.maps.InfoWindow();
+                geo.addListener('click', function(data_mouseEvent) {
+                    var feature = data_mouseEvent.feature;
+                    feature.toGeoJson(function(geojson){
+                        var name = geojson.properties.KABKOT;
+                        places.forEach(element => {
+                            if (name == element.city) {
+                                var distributor = element.distributor.length;
+                                var myHTMLss = 'Kota: '+ name + '<br>' +
+                                'Jumlah Distributor: '+ element.distributor.length + '<br>' +
+                                "<a href='/dashboard/place/" + element.id + "' class='btn btn-primary px-2 py-1'>Lihat Detail</a>";
+                                infowindow.setContent(myHTMLss);
+                                infowindow.setPosition(data_mouseEvent.latLng);
+                                infowindow.open(maps[0].map);
+                            }
+                        });
+                    });
+                });
+            }
+            google.maps.event.addDomListener(window, 'load', initMap);
         });
     </script>
 @endsection

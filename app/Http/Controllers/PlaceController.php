@@ -26,13 +26,13 @@ class PlaceController extends Controller
             'center' => true, 
             'marker' => false
         ]);
-        foreach ($places as $index => $place) {
-            $content = $place->city . "<br>Jumlah Distributor: " . $place->distributor->count() . "<br><br><a href='/dashboard/place/" . $place->id . "' class='btn btn-primary px-2 py-1'>Lihat Detail</a>";
-            Mapper::informationWindow($place->coordinate->getLat(), $place->coordinate->getLng(), $content, 
-            [ 
-                'maxWidth' => 600,
-            ]);
-        }
+        // foreach ($places as $index => $place) {
+        //     $content = $place->city . "<br>Jumlah Distributor: " . $place->distributor->count() . "<br><br><a href='/dashboard/place/" . $place->id . "' class='btn btn-primary px-2 py-1'>Lihat Detail</a>";
+        //     Mapper::informationWindow($place->coordinate->getLat(), $place->coordinate->getLng(), $content, 
+        //     [ 
+        //         'maxWidth' => 600,
+        //     ]);
+        // }
         return view('place.index', compact('places'));
     }
 
