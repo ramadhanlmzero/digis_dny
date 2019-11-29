@@ -19,6 +19,7 @@ class CreateDistributorsTable extends Migration
             $table->string('phone', 12)->nullable();
             $table->string('gender', 9)->nullable();
             $table->integer('capacity')->nullable();
+            $table->point('coordinate')->nullable();
             $table->uuid('place_id')->nullable();
             $table->foreign('place_id')->references('id')->on('place')->onDelete('cascade');
             $table->uuid('user_id')->nullable();

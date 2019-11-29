@@ -20,19 +20,13 @@ class PlaceController extends Controller
     public function index()
     {
         $places = Place::orderBy('updated_at', 'DESC')->get();
+        $distributors = Distributor::all();
         Mapper::location('Jawa Timur')->map(
         [
             'zoom' => 8, 
             'center' => true, 
             'marker' => false
         ]);
-        // foreach ($places as $index => $place) {
-        //     $content = $place->city . "<br>Jumlah Distributor: " . $place->distributor->count() . "<br><br><a href='/dashboard/place/" . $place->id . "' class='btn btn-primary px-2 py-1'>Lihat Detail</a>";
-        //     Mapper::informationWindow($place->coordinate->getLat(), $place->coordinate->getLng(), $content, 
-        //     [ 
-        //         'maxWidth' => 600,
-        //     ]);
-        // }
         return view('place.index', compact('places'));
     }
 
@@ -43,22 +37,6 @@ class PlaceController extends Controller
      */
     public function create()
     {
-        Mapper::location('Jawa Timur')->map(
-        [
-            'zoom' => 8, 
-            'center' => true, 
-            'marker' => false
-        ]);
-        Mapper::informationWindow(-7.2754438, 112.6426426, 'Geser marker ini!', 
-        [
-            'open' => true, 
-            'maxWidth' => 300, 
-            'markers' => [
-                'title' => 'Title',
-                'draggable' => true,
-                'eventDrag' => 'document.getElementById("lat").value = event.latLng.lat();document.getElementById("long").value = event.latLng.lng();'
-            ]
-        ]);
         return view('place.create');
     }
 
@@ -71,9 +49,7 @@ class PlaceController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'city' => 'required',
-            'lat' => 'required',
-            'long' => 'required'
+            'city' => 'required'
         ];
 
         $rulesMessages = [
@@ -84,8 +60,7 @@ class PlaceController extends Controller
 
         $data = [
             'id' => (string) Str::uuid(),
-            'city' => $request->city,
-            'coordinate' => new Point($request->lat, $request->long)
+            'city' => $request->city
         ];
         Place::create($data);
 
@@ -102,14 +77,20 @@ class PlaceController extends Controller
     public function show($id)
     {
         $place = Place::find($id);
-        $distributor = Distributor::where('place_id', $place->id)->first();
-        Mapper::map($place->coordinate->getLat(), $place->coordinate->getLng(),
+        $distributors = Distributor::where('place_id', $place->id)->get();
+        Mapper::location($place->city)->map(
         [
-            'zoom' => 8, 
+            'zoom' => 11, 
             'center' => true, 
             'marker' => false
         ]);
-        Mapper::marker($place->coordinate->getLat(), $place->coordinate->getLng());
+        foreach ($distributors as $index => $distributor) {
+            $content = "<br>Nama Distributor: " . $distributor->user->name . "<br>Alamat: " . $distributor->address . "<br><br><a href='/dashboard/user/" . $distributor->id . "' class='btn btn-primary px-2 py-1'>Lihat Detail</a>";
+            Mapper::informationWindow($distributor->coordinate->getLat(), $distributor->coordinate->getLng(), $content, 
+            [ 
+                'maxWidth' => 600,
+            ]);
+        }
         return view('place.show', compact('place', 'distributor'));
     }
 
@@ -122,21 +103,6 @@ class PlaceController extends Controller
     public function edit($id)
     {
         $place = Place::find($id);
-        Mapper::map($place->coordinate->getLat(), $place->coordinate->getLng(),
-        [
-            'zoom' => 8,
-            'center' => true,
-            'marker' => false
-        ]
-        );
-        Mapper::marker(
-            -7.2754438,
-            112.6426426,
-            [
-                'draggable' => true,
-                'eventDrag' => 'document.getElementById("lat").value = event.latLng.lat();document.getElementById("long").value = event.latLng.lng();'
-            ]
-        );
         return view('place.edit', compact('place'));
     }
 
@@ -150,9 +116,7 @@ class PlaceController extends Controller
     public function update(Request $request, $id)
     {
         $rules = [
-            'city' => 'required',
-            'lat' => 'required',
-            'long' => 'required'
+            'city' => 'required'
         ];
 
         $rulesMessages = [
@@ -164,8 +128,7 @@ class PlaceController extends Controller
         $place = Place::find($id);
 
         $data = [
-            'city' => $request->city,
-            'coordinate' => new Point($request->lat, $request->long)
+            'city' => $request->city
         ];
         $place->update($data);
 

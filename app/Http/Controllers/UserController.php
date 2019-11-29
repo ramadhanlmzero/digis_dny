@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Grimzy\LaravelMysqlSpatial\Types\Point;
 use Alert;
+use Mapper;
 use Carbon\Carbon;
 use App\User;
 use App\Model\Distributor;
@@ -101,7 +103,8 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = User::find($id);
+        return view('user.show', compact('user'));
     }
 
     /**
@@ -114,7 +117,29 @@ class UserController extends Controller
     {
         $user = User::find($id);
         $places = Place::all();
-        return view('user.edit', compact('user', 'places'));
+        if($user->role == 'Distributor') {
+            if($user->distributor->coordinate == null) {
+                $lat = -7.2754438;
+                $long = 112.6426426;
+            }
+            else {
+                $lat = $user->distributor->coordinate->getLat();
+                $long = $user->distributor->coordinate->getLng();
+            }
+            if($user->distributor->place_id == null) {
+                $city = 'Surabaya';
+            }
+            else {
+                $city = $user->distributor->place->city;
+            }
+            Mapper::location($city)->map(
+            [
+                'zoom' => 8,
+                'center' => true,
+                'marker' => false
+            ]);
+        }
+        return view('user.edit', compact('user', 'places', 'lat', 'long'));
     }
 
     /**
@@ -126,12 +151,24 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $rules = [
-            'name' => 'required',
-            'email' => 'required',
-            'role' => 'required',
-            'photo' => 'max:3000|mimes:jpg,jpeg,png'
-        ];
+        if($request->role == 'Admin') {
+            $rules = [
+                'name' => 'required',
+                'email' => 'required',
+                'role' => 'required',
+                'photo' => 'max:3000|mimes:jpg,jpeg,png'
+            ];
+        }
+        if($request->role == 'Distributor') {
+            $rules = [
+                'name' => 'required',
+                'email' => 'required',
+                'role' => 'required',
+                'photo' => 'max:3000|mimes:jpg,jpeg,png',
+                'lat' => 'required',
+                'long' => 'required'
+            ];
+        }
 
         $rulesMessages = [
             'required' => 'Wajib diisi!',
@@ -170,7 +207,8 @@ class UserController extends Controller
                 'phone' => $request->phone,
                 'address' => $request->address,
                 'place_id' => $request->place_id,
-                'capacity' => $request->capacity
+                'capacity' => $request->capacity,
+                'coordinate' => new Point($request->lat, $request->long)
             ];
             $distributor->update($data2);
         }

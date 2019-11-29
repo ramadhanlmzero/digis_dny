@@ -16,7 +16,6 @@ class CreateKotasTable extends Migration
         Schema::create('place', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('city', 50);
-            $table->point('coordinate'); // GEOGRAPHY POINT column with SRID of 4326 (these are the default values).
             $table->timestamps();
         });
     }

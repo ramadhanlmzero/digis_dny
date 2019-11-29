@@ -3,15 +3,27 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Model\Place;
+use Grimzy\LaravelMysqlSpatial\Eloquent\SpatialTrait;
 use App\User;
+use App\Model\Place;
 use App\Model\Transaction;
 use App\Model\Product;
 
+/**
+ * @property \Grimzy\LaravelMysqlSpatial\Types\Point   $location
+ * @property \Grimzy\LaravelMysqlSpatial\Types\Polygon $area
+ */
+
 class Distributor extends Model
 {
+    use SpatialTrait;
+
     protected $table = 'distributor';
     protected $guarded = [];
+
+    protected $spatialFields = [
+        'coordinate'
+    ];
 
     public $incrementing = false;
 
