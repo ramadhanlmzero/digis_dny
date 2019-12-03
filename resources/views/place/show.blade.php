@@ -21,13 +21,17 @@
                         <hr>
                         <div>
                             <p class="font-weight-bold">
-                                Jumlah Transaksi yang Telah Berlangsung : 
-                                @if ($distributor)
-                                    {{ $distributor->transaction->count() }}
-                                @else
-                                    0
-                                @endif
+                                Daftar Nama Distributor di {{ $place->city }} :
                             </p>
+                            @if (!$distributors->isEmpty())
+                                <ol>
+                                    @foreach ($distributors as $distributor)
+                                    <li>{{ $distributor->user->name }} (target penjualan: {{ $distributor->capacity }}/bulan)</li>
+                                    @endforeach
+                                </ol> 
+                            @else 
+                                <p>Belum ada distributor</p>
+                            @endif
                         </div>
                     </div>
                     <div class="col-md-6 pull-right">

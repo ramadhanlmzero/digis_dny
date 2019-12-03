@@ -91,7 +91,7 @@ class PlaceController extends Controller
                 'maxWidth' => 600,
             ]);
         }
-        return view('place.show', compact('place', 'distributor'));
+        return view('place.show', compact('place', 'distributors'));
     }
 
     /**

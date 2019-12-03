@@ -23,6 +23,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth'], function () {
         Route::resource('distributor', 'DistributorController');
         Route::resource('place', 'PlaceController');
         Route::resource('product', 'ProductController');
+        Route::resource('distributorproduct', 'DistributorProductController');
     });
     Route::group(['middleware' => ['role:Admin,Distributor']], function () {
         Route::get('/dashboard', 'DashboardController@index')->name('dashboard');

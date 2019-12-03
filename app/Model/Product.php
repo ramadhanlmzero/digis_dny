@@ -15,11 +15,11 @@ class Product extends Model
     
     public function transaction()
     {
-        return $this->belongsToMany(Transaction::class);
+        return $this->belongsToMany(Transaction::class)->withTimestamps();
     }
 
     public function distributor()
     {
-        return $this->belongsToMany(Distributor::class);
+        return $this->belongsToMany(Distributor::class)->withPivot('stock')->withTimestamps();
     }
 }

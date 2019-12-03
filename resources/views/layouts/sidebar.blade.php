@@ -49,6 +49,12 @@
                 <p>Riwayat Transaksi</p>
             </a>
         </li>
+        <li class="nav-item {{ setActive(['distributorproduct*']) }}">
+            <a href="{{ route('distributorproduct.index') }}">
+                <i class="la la-cube"></i>
+                <p>Data Produk Distributor</p>
+            </a>
+        </li>
         <li class="nav-item {{ setActive(['product*']) }}">
             <a href="{{ route('product.index') }}">
                 <i class="la la-cube"></i>
