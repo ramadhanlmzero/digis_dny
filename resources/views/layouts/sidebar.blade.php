@@ -23,7 +23,7 @@
             <div class="collapse in" id="collapseExample" aria-expanded="true" style="">
                 <ul class="nav">
                     <li>
-                        <a href="#profile">
+                        <a href="{{ route('user.profile', Auth::user()->id) }}">
                             <span class="link-collapse">Profil Saya</span>
                         </a>
                     </li>

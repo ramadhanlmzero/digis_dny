@@ -35,15 +35,15 @@
                         <div class="user-box">
                             <div class="u-text">
                                 <h4>{{ Auth::user()->name }}</h4>
-                                <p class="text-muted">{{ Auth::user()->email }}</p><a href="profile.html" class="btn btn-rounded btn-danger btn-sm">Lihat Profil</a>
+                                <p class="text-muted">{{ Auth::user()->email }}</p>
+                                <a href="{{ route('user.profile', Auth::user()->id) }}" class="btn btn-rounded btn-danger btn-sm">Lihat Profil</a>
                             </div>
                         </div>
                     </li>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#"><i class="ti-user"></i> Profil Saya</a>
+                    <a class="dropdown-item" href="{{ route('user.profile', Auth::user()->id) }}"><i class="ti-user"></i> Profil Saya</a>
                     <a class="dropdown-item" href="#"><i class="ti-user"></i> Riwayat Akun</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#"><i class="ti-settings"></i> Kembali ke Beranda</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

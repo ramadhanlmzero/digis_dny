@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Grimzy\LaravelMysqlSpatial\Types\Point;
 use Alert;
+use Auth;
 use Mapper;
 use Carbon\Carbon;
 use App\User;
@@ -253,6 +254,17 @@ class UserController extends Controller
         }
         else {
             return redirect()->route('user.reset', $id)->with('error', 'Password lama anda salah!');
+        }
+    }
+
+    public function profile($id)
+    {
+        if (Auth::user()->id == $id) {
+            $user = User::find($id);
+            return view('user.show', compact('user'));
+        }
+        else {
+            return redirect()->route('dashboard');
         }
     }
 }
