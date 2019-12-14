@@ -37,7 +37,7 @@
                                 </td>
                                 <td>
                                     <div class="btn-group">
-                                        <a href="{{ route('distributorproduct.show', $distributor->id) }}" class="btn btn-primary px-2 py-1">
+                                        <a href="{{ route('user.show', $distributor->user->id . "#product") }}" class="btn btn-primary px-2 py-1">
                                             <i class="la la-eye"></i>
                                         </a>
                                         <a href="{{ route('distributorproduct.edit', $distributor->id) }}" class="btn btn-success px-2 py-1 mx-2">

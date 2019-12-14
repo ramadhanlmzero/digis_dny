@@ -105,7 +105,8 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::find($id);
-        return view('user.show', compact('user'));
+        $distributor = Distributor::where('user_id', $user->id)->first();
+        return view('user.show', compact('user', 'distributor'));
     }
 
     /**
@@ -259,9 +260,10 @@ class UserController extends Controller
 
     public function profile($id)
     {
-        if (Auth::user()->id == $id) {
+        if (Auth::user()->id == $id || Auth::user()->role == 'Admin') {
             $user = User::find($id);
-            return view('user.show', compact('user'));
+            $distributor = Distributor::where('user_id', $user->id)->first();
+            return view('user.show', compact('user', 'distributor'));
         }
         else {
             return redirect()->route('dashboard');

@@ -74,20 +74,25 @@
                             </div>
                         </section>
                         <section class="mt-4">
-                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <ul class="nav nav-tabs" id="myTab">
                                 <li class="nav-item">
-                                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">
+                                    <a class="nav-link active" id="about-tab" data-toggle="tab" href="#about" aria-controls="about" aria-selected="true">
                                         Tentang
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">
+                                    <a class="nav-link" id="product-tab" data-toggle="tab" href="#product" aria-controls="product" aria-selected="false">
+                                        Stok Produk  
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="transaction-tab" data-toggle="tab" href="#transaction" aria-controls="transaction" aria-selected="false">
                                         Riwayat Transaksi    
                                     </a>
                                 </li>
                             </ul>
                             <div class="tab-content py-4" id="myTabContent">
-                                <div class="tab-pane py-3 fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                <div class="tab-pane py-3 fade show active" id="about" role="tabpanel" aria-labelledby="about-tab">
                                     <h6 class="text-uppercase font-weight-light text-secondary">
                                         Informasi Kontak
                                     </h6>
@@ -113,8 +118,36 @@
                                         <dd class="col-sm-9">{{$user->distributor->gender}}</dd>
                                     </dl>
                                 </div>
-                                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
-                                <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                                <div class="tab-pane fade" id="product" role="tabpanel" aria-labelledby="product-tab">
+                                    <p class="font-weight-bold">
+                                        Jenis Produk : {{ $distributor->product->count() }}
+                                    </p>
+                                    <p class="font-weight-bold">
+                                        Stok Produk :
+                                    </p>
+                                    @if (!$distributor->product->isEmpty())
+                                        <ol class="pl-3">
+                                            @foreach ($distributor->product as $product)
+                                            <p>
+                                                <li>
+                                                    <p class="my-0">
+                                                        {{ $product->title }}
+                                                    </p>
+                                                    <p class="my-0">
+                                                        Stok: {{ $product->pivot->stock }} buah
+                                                    </p>
+                                                    <p class="my-0">
+                                                        Update terakhir: {{ Carbon\Carbon::parse($product->pivot->updated_at, 'Asia/Jakarta')->locale('ID')->diffForHumans() }}
+                                                    </p>
+                                                </li>
+                                            </p>
+                                            @endforeach
+                                        </ol> 
+                                    @else 
+                                        <p>Belum ada produk</p>
+                                    @endif
+                                </div>
+                                <div class="tab-pane fade" id="transaction" role="tabpanel" aria-labelledby="transaction-tab">...</div>
                             </div>
                         </section>
                     </div>
@@ -123,4 +156,21 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('js')
+    <script>
+        var url = document.URL;
+        var hash = url.substring(url.indexOf('#'));
+
+        $(".nav-tabs").find("li a").each(function(key, val) {
+            if (hash == $(val).attr('href')) {
+                $(val).click();
+            }
+            
+            $(val).click(function(ky, vl) {
+                location.hash = $(this).attr('href');
+            });
+        });
+    </script>
 @endsection
