@@ -26,8 +26,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth'], function () {
     });
     Route::group(['middleware' => ['role:Admin,Distributor']], function () {
         Route::resource('place', 'PlaceController');
-        Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
-        Route::get('/profile/{id}', 'UserController@profile')->name('user.profile');
+        Route::get('/', 'DashboardController@index')->name('dashboard');
+        Route::get('/profil/{id}', 'UserController@profile')->name('user.profile');
         Route::resource('transaction', 'TransactionController');
     });
 });

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Grimzy\LaravelMysqlSpatial\Types\Point;
 use Illuminate\Support\Str;
 use Alert;
 use Mapper;
