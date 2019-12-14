@@ -25,11 +25,13 @@
                                 </label>
                             </div>
                             @if ($distributor->product->contains($product->id))
-                            @foreach ($product->distributor as $item)
-                            <div class="stock">
-                                <input type="number" class="form-control form-control-sm col-5" name="stock[]" value="{{ $item->pivot->stock }}">
-                            </div>
-                            @endforeach
+                                @foreach ($product->distributor as $item)
+                                    @if ($item->pivot->distributor_id == $distributor->id)
+                                        <div class="stock">
+                                            <input type="number" class="form-control form-control-sm col-5" name="stock[]" value="{{ $item->pivot->stock }}">
+                                        </div>
+                                    @endif
+                                @endforeach
                             @else 
                             <div class="stock" style="display:none;"></div>
                             @endif

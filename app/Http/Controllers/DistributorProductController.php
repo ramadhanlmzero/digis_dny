@@ -81,7 +81,6 @@ class DistributorProductController extends Controller
     public function update(Request $request, $id)
     {
         $distributor = Distributor::find($id);
-        // dd($request->product_id);
 
         $stock = 0;
         foreach ($request->stock as $value) {
