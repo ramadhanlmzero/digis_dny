@@ -44,7 +44,6 @@
                     <a class="dropdown-item" href="{{ route('user.profile', Auth::user()->id) }}"><i class="ti-user"></i> Profil Saya</a>
                     <a class="dropdown-item" href="#"><i class="ti-user"></i> Riwayat Akun</a>
                     <div class="dropdown-divider"></div>
-                    <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                             {{ csrf_field() }}

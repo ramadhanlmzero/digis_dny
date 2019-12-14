@@ -84,7 +84,7 @@ class PlaceController extends Controller
             'marker' => false
         ]);
         foreach ($distributors as $index => $distributor) {
-            $content = "<br>Nama Distributor: " . $distributor->user->name . "<br>Alamat: " . $distributor->address . "<br><br><a href='/dashboard/user/" . $distributor->id . "' class='btn btn-primary px-2 py-1'>Lihat Detail</a>";
+            $content = "<br>Nama Distributor: " . $distributor->user->name . "<br>Alamat: " . $distributor->address . "<br><br><a href='/dashboard/user/" . $distributor->user->id . "' class='btn btn-primary px-2 py-1'>Lihat Detail</a>";
             Mapper::informationWindow($distributor->coordinate->getLat(), $distributor->coordinate->getLng(), $content, 
             [ 
                 'maxWidth' => 600,
