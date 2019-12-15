@@ -20,7 +20,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth'], function () {
         Route::resource('user', 'UserController');
         Route::match(['put', 'patch'], '/user/resetpassword/{id}', 'UserController@resetpassword')->name('user.resetpassword');
         Route::get('/user/{id}/reset', 'UserController@reset')->name('user.reset');
-        Route::resource('distributor', 'DistributorController');
+        // Route::resource('distributor', 'DistributorController');
         Route::resource('product', 'ProductController');
         Route::resource('distributorproduct', 'DistributorProductController');
     });
@@ -29,5 +29,10 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth'], function () {
         Route::get('/', 'DashboardController@index')->name('dashboard');
         Route::get('/profil/{id}', 'UserController@profile')->name('user.profile');
         Route::resource('transaction', 'TransactionController');
+		Route::post('transaction/checkout', 'TransactionController@checkout')->name('transaction.checkout');
+		Route::get('transaction/checkout', 'TransactionController@checkout');
     });
+    Route::get('{any}', 'FrontController@any');
 });
+
+Route::get('{any}', 'FrontController@any');

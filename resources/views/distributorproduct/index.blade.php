@@ -5,6 +5,11 @@
 @extends('layouts.app')
 
 @section('content')
+{{-- <div class="mb-4">
+    <a href="{{ route('distributor.create') }}">
+        <button type="button" class="btn btn-info">Tambah Data</button>
+    </a>
+</div> --}}
 <div class="row">
     <div class="col-md-12">
         <div class="card">
@@ -40,13 +45,17 @@
                                         <a href="{{ route('user.show', $distributor->user->id . "#product") }}" class="btn btn-primary px-2 py-1">
                                             <i class="la la-eye"></i>
                                         </a>
-                                        <a href="{{ route('distributorproduct.edit', $distributor->id) }}" class="btn btn-success px-2 py-1 mx-2">
+                                        {{-- <a href="{{ route('distributor.edit', $distributor->id) }}" class="btn btn-success px-2 py-1 ml-1">
                                             <i class="la la-pencil-square"></i>
+                                        </a> --}}
+                                        <a href="{{ route('distributorproduct.edit', $distributor->id) }}" class="btn btn-warning px-2 py-1 ml-1">
+                                            {{-- <i class="fas fa-warehouse-square"></i> --}}
+                                            <i class="las la-warehouse"></i>
                                         </a>
                                         <form action="{{ route('distributorproduct.destroy', $distributor->id) }}" method="post">
                                         {{ csrf_field() }}
                                         {{ method_field('delete') }}
-                                            <button class="btn btn-danger px-2 py-1" onclick="return confirm('Anda yakin ingin menghapus data ini?')"> 
+                                            <button class="btn btn-danger px-2 py-1 ml-1" onclick="return confirm('Anda yakin ingin menghapus data ini?')"> 
                                                 <i class="la la-trash"></i>
                                             </button>
                                         </form>
