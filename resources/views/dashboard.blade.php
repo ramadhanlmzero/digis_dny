@@ -5,6 +5,7 @@
 @extends('layouts.app')
 
 @section('content')
+@if (Auth::user()->role == 'Admin')
 <div class="row">
     <div class="col-md-3">
         <div class="card card-stats card-warning">
@@ -15,7 +16,7 @@
                             <i class="la la-users"></i>
                         </div>
                     </div>
-                    <div class="col-7 d-flex align-items-center">
+                    <div class="col-7 d-flex align-items-center pl-0">
                         <div class="numbers">
                             <p class="card-category">Distributor</p>
                             <h4 class="card-title">{{ $totalDistributors }}</h4>
@@ -34,7 +35,7 @@
                             <i class="la la la-map"></i>
                         </div>
                     </div>
-                    <div class="col-7 d-flex align-items-center">
+                    <div class="col-7 d-flex align-items-center pl-0">
                         <div class="numbers">
                             <p class="card-category">Kota</p>
                             <h4 class="card-title">{{ $totalPlaces }}</h4>
@@ -53,7 +54,7 @@
                             <i class="la la la-shopping-cart"></i>
                         </div>
                     </div>
-                    <div class="col-7 d-flex align-items-center">
+                    <div class="col-7 d-flex align-items-center pl-0">
                         <div class="numbers">
                             <p class="card-category">Produk</p>
                             <h4 class="card-title">{{ $totalProducts }}</h4>
@@ -72,7 +73,7 @@
                             <i class="la la-bar-chart"></i>
                         </div>
                     </div>
-                    <div class="col-7 d-flex align-items-center">
+                    <div class="col-7 d-flex align-items-center pl-0">
                         <div class="numbers">
                             <p class="card-category">Penjualan</p>
                             <h4 class="card-title">{{ $totalTransactions }}</h4>
@@ -99,6 +100,87 @@
         </div>
     </div>
 </div>
+@elseif(Auth::user()->role == 'Distributor')
+<div class="row">
+    <div class="col-md-3">
+        <div class="card card-stats card-warning">
+            <div class="card-body ">
+                <div class="row">
+                    <div class="col-5">
+                        <div class="icon-big text-center">
+                            <i class="la la-users"></i>
+                        </div>
+                    </div>
+                    <div class="col-7 d-flex align-items-center pl-0">
+                        <div class="numbers">
+                            <p class="card-category">Status Anda</p>
+                            <h4 class="card-title">{{ Auth::user()->role }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-stats card-success">
+            <div class="card-body ">
+                <div class="row">
+                    <div class="col-5">
+                        <div class="icon-big text-center">
+                            <i class="la la la-map"></i>
+                        </div>
+                    </div>
+                    <div class="col-7 d-flex align-items-center pl-0">
+                        <div class="numbers">
+                            <p class="card-category">Kota Anda</p>
+                            <h4 class="card-title">{{ $your->place->city }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-stats card-danger">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-5">
+                        <div class="icon-big text-center">
+                            <i class="la la la-shopping-cart"></i>
+                        </div>
+                    </div>
+                    <div class="col-7 d-flex align-items-center pl-0">
+                        <div class="numbers">
+                            <p class="card-category">Produk Anda</p>
+                            <h4 class="card-title">{{ $your->product->count() }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-stats card-primary">
+            <div class="card-body ">
+                <div class="row">
+                    <div class="col-5">
+                        <div class="icon-big text-center">
+                            <i class="la la-bar-chart"></i>
+                        </div>
+                    </div>
+                    <div class="col-7 d-flex align-items-center pl-0">
+                        <div class="numbers">
+                            <p class="card-category">Penjualan Anda</p>
+                            <h4 class="card-title">{{ $your->transaction->count() }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="padding-bottom:297px;"></div>
+@endif
 @endsection
 
 @section('css')
@@ -136,13 +218,11 @@
                     var color = "gray";
                     places.forEach(element => {
                         element.distributor.forEach(item => {
-                            if (item.transaction.length > 0) {
-                                if (KABKOT == element.city) {
-                                    color = "green";
+                            if (KABKOT == element.city) {
+                                if (item.transaction.length > 0) {
+                                    color = "yellow";
                                 }
-                            }
-                            if (item.transaction.length < 1) {
-                                if (KABKOT == element.city) {
+                                if (item.transaction.length < 1) {
                                     color = "red";
                                 }
                             }

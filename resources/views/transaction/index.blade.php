@@ -1,5 +1,4 @@
 @section('title')
-
     @if(Auth::user()->role=='Distributor')
         Riwayat Transaksi
     @elseif(Auth::user()->role=='Admin')
@@ -10,20 +9,15 @@
 @extends('layouts.app')
 
 @section('content')
-{{-- <div class="mb-4">
-    <a href="{{ route('product.create') }}">
-        <button type="button" class="btn btn-info">Tambah Data</button>
-    </a>
-</div> --}}
 @if(Auth::user()->role=='Distributor')
 <div class="row">
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <div class="card-title">Tabel @yield('title')</div>
+                <div class="card-title">@yield('title') Anda</div>
             </div>
             <div class="card-body">
-                <table id="productTable" class="table table-bordered table-head-bg-info table-bordered-bd-info">
+                <table id="transactionTable" class="table table-bordered table-head-bg-info table-bordered-bd-info">
                     <thead>
                         <tr>
                             <th width="30">No.</th>
@@ -38,10 +32,10 @@
                         @foreach ($transaction as $index => $transaction)
                             <tr>
                                 <td>{{ $index+1 }}</td>
-                                <td>{{ $transaction->created_at }}</td>
-                                <td>{{ $transaction->total_price }}</td>
-                                <td>{{ $transaction->total_paid }}</td>
-                                <td>{{ $transaction->total_change }}</td>
+                                <td>{{ \Carbon\Carbon::parse($transaction->created_at, 'Asia/Jakarta')->formatLocalized('%d %B %Y') }}</td>
+                                <td class="text-right">Rp. {{ number_format($transaction->total_price, 2, ',', '.') }}</td>
+                                <td class="text-right">Rp. {{ number_format($transaction->total_paid, 2, ',', '.') }}</td>
+                                <td class="text-right">Rp. {{ number_format($transaction->total_change, 2, ',', '.') }}</td>
                                 <td>
                                     <div class="btn-group">
                                         <a href="{{ route('transaction.show', $transaction->id) }}" class="btn btn-primary px-2 py-1">
@@ -114,13 +108,13 @@
     <script src="{{ asset('assets/js/plugin/datatable/dataTables.bootstrap4.min.js') }}"></script>
     <script>
         $(document).ready(function() {
-            $("#productTable").DataTable({
+            $("#transactionTable").DataTable({
                 "oLanguage": {
-                    "sLengthMenu": "Tampilkan _MENU_ produk",
+                    "sLengthMenu": "Tampilkan _MENU_ transaksi",
                     "sZeroRecords": "Belum ada transaksi",
                     "sInfoEmpty": "Menampilkan 0 data",
                     "sInfoFiltered": "",
-                    "sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ produk",
+                    "sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ transaksi",
                     "sSearch": "Cari: ",
                     "oPaginate": {
                         "sNext": "Selanjutnya",

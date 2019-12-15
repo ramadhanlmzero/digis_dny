@@ -36,14 +36,22 @@
                             <div class="u-text">
                                 <h4>{{ Auth::user()->name }}</h4>
                                 <p class="text-muted">{{ Auth::user()->email }}</p>
-                                <a href="{{ route('user.profile', Auth::user()->id) }}" class="btn btn-rounded btn-danger btn-sm">Lihat Profil</a>
+                                @if (Auth::user()->role == 'Distributor')
+                                    <a href="{{ route('profile.index', Auth::user()->id) }}" class="btn btn-rounded btn-danger btn-sm">Lihat Profil</a>
+                                @endif
                             </div>
                         </div>
                     </li>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{{ route('user.profile', Auth::user()->id . "#about") }}"><i class="ti-user"></i> Profil Saya</a>
-                    <a class="dropdown-item" href="{{ route('user.profile', Auth::user()->id . "#product") }}"><i class="ti-user"></i> Riwayat Produk</a>
-                    <a class="dropdown-item" href="{{ route('user.profile', Auth::user()->id . "#transaction") }}"><i class="ti-user"></i> Riwayat Transaksi</a>
+                    @if (Auth::user()->role == 'Admin')
+                        <a class="dropdown-item" href="{{ route('user.edit', Auth::user()->id) }}"><i class="ti-user"></i> Ubah Profil</a>
+                        <a class="dropdown-item" href="{{ route('user.reset', Auth::user()->id) }}"><i class="ti-user"></i> Ubah Password</a>
+                    @endif
+                    @if (Auth::user()->role == 'Distributor')
+                        <a class="dropdown-item" href="{{ route('profile.index', Auth::user()->id . "#about") }}"><i class="ti-user"></i> Profil Saya</a>
+                        <a class="dropdown-item" href="{{ route('profile.index', Auth::user()->id . "#product") }}"><i class="ti-user"></i> Stok Produk</a>
+                        <a class="dropdown-item" href="{{ route('profile.index', Auth::user()->id . "#transaction") }}"><i class="ti-user"></i> Riwayat Transaksi</a>
+                    @endif
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

@@ -22,21 +22,35 @@
             <div class="clearfix"></div>
             <div class="collapse in" id="collapseExample" aria-expanded="true" style="">
                 <ul class="nav">
-                    <li>
-                        <a href="{{ route('user.profile', Auth::user()->id . "#about") }}">
-                            <span class="link-collapse">Profil Saya</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('user.profile', Auth::user()->id . "#product") }}">
-                            <span class="link-collapse">Stok Produk</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('user.profile', Auth::user()->id . "#transaction") }}">
-                            <span class="link-collapse">Riwayat Transaksi</span>
-                        </a>
-                    </li>
+                    @if (Auth::user()->role == 'Distributor')
+                        <li>
+                            <a href="{{ route('profile.index', Auth::user()->id . "#about") }}">
+                                <span class="link-collapse">Profil Saya</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('profile.index', Auth::user()->id . "#product") }}">
+                                <span class="link-collapse">Stok Produk</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('profile.index', Auth::user()->id . "#transaction") }}">
+                                <span class="link-collapse">Riwayat Transaksi</span>
+                            </a>
+                        </li>
+                    @endif
+                    @if (Auth::user()->role == 'Admin')
+                        <li>
+                            <a href="{{ route('user.edit', Auth::user()->id) }}">
+                                <span class="link-collapse">Ubah Profil</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('user.reset', Auth::user()->id) }}">
+                                <span class="link-collapse">Ubah Password</span>
+                            </a>
+                        </li>
+                    @endif
                 </ul>
             </div>
         </div>
@@ -80,12 +94,12 @@
                 <p>Data Produk Distributor</p>
             </a>
         </li>
-        @endif
-        {{-- <li class="nav-item {{ setActive(['user*']) }}">
+        <li class="nav-item {{ setActive(['user*']) }}">
             <a href="{{ route('user.index') }}">
                 <i class="la la-user"></i>
                 <p>Data User</p>
             </a>
-        </li> --}}
+        </li>
+        @endif
     </ul>
 </div>

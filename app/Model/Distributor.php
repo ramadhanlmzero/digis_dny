@@ -34,7 +34,7 @@ class Distributor extends Model
 
     public function transaction()
     {
-        return $this->hasMany(Transaction::class, 'id', 'transaction_id');
+        return $this->hasMany(Transaction::class);
     }
 
     public function user()

@@ -17,11 +17,12 @@ class TransactionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {   //cari id distributor
-        if(Auth()->user()->role=="Distributor"){
+    {   
+        if(Auth()->user()->role == "Distributor"){
             $distributor = Distributor::where('user_id',Auth()->user()->id)->first();
             $transaction = Transaction::where('distributor_id', $distributor->id)->orderBy('created_at', 'DESC')->get();
-        }else{
+        }
+        else {
             $transaction = Transaction::orderBy('created_at', 'DESC')->get();
         }
         
@@ -35,9 +36,9 @@ class TransactionController extends Controller
      */
     public function create()
     {
-        $distributor = Distributor::where('user_id',Auth()->user()->id)->first();
+        $distributor = Distributor::with('product')->where('user_id',Auth()->user()->id)->first();
         $products = Product::orderBy('title', 'DESC')->get();
-        return view('transaction.create', ['distributor' => $distributor,'products' =>$products]);
+        return view('transaction.create', compact('distributor', 'products'));
     }
 
     /**
@@ -48,43 +49,46 @@ class TransactionController extends Controller
      */
     public function checkout(Request $request)
     {
+        $this->validate($request, [
+            'product_id' => 'required',
+        ], [
+            'required' => 'Pilih produk terlebih dahulu!',
+        ]);
+
         $warning='';
-        $distributor = Distributor::where('user_id',Auth()->user()->id)->first();
         $product_id = $request->product_id;
+        $distributor = Distributor::where('user_id',Auth()->user()->id)->first();
         $qty = $request->qty;
-        // $product = Product::first();
-        //foreach untuk cek stok level 1 
-        foreach($distributor->product as $stock){
-            // $s[]=($stock->pivot->product_id).':'.$product_id[$arraynum].':'.$qty[$arraynum];
-            //foreach data checkout level 2
-            foreach($product_id as $arraynum=>$p_id){
-                //if product_id(post) = product_id(pivot) level 3
-                if($p_id==$stock->pivot->product_id){
-                    //if jika qty(post) lebih besar dari stock level 4
-                    if($stock->pivot->stock<$qty[$arraynum]){
-                        $warning.='stok ' . $stock->title . ' hanya berjumlah : '.$stock->pivot->stock.' buah saja!';
-                    }else{
-                        $pr_id[]=$p_id;
-                        $title[]=$stock->title;
-                        $price[]=$stock->price;
-                        $qty[]=$qty[$arraynum];
-                        $total[]=$stock->price*$qty[$arraynum];
-                        $stok[]=$stock->pivot->stock-$qty[$arraynum];
+
+        foreach ($distributor->product as $product) {
+            foreach ($product_id as $key => $value) {
+                if ($value == $product->pivot->product_id) {
+                    if ($product->pivot->stock < $qty[$key]) {
+                        $warning .= 'Stok ' . $product->title . ' hanya berjumlah ' . $product->pivot->stock . ' buah saja!';
                     }
-                    //end level4
-                }//end level 3
-            }//end foreach level 2
-        }//end foreach level 1
-        if($warning!=''){
+                    else {
+                        if (count($product_id)) {
+                            $products = Product::whereIn('id', $product_id)->get();
+                        } else {
+                            $products = Product::where('id', $product_id)->first();
+                        }
+                    }
+                }
+            }
+        }
+
+        if ($warning != '') {
             return redirect()->back()->withErrors([$warning, 'msg']);
-        }else{
-        return view('transaction.checkout',['product_id'=>$pr_id,'p_id'=>$pr_id,'title'=>$title,'price'=>$price,'qty'=>$qty,'total'=>$total,'stock'=>$stok]);
+        } 
+        else {
+            return view('transaction.checkout', compact('distributor', 'products', 'product_id', 'qty'));
         }
     }
+
     public function store(Request $request)
     {
         $distributor = Distributor::where('user_id',Auth()->user()->id)->first();
-        //buat transaksi
+
         Transaction::create([
             'id' => (string) Str::uuid(),
             'total_price' => $request->total,
@@ -92,13 +96,14 @@ class TransactionController extends Controller
             'total_change' => $request->bayar-$request->total,
             'distributor_id' => $distributor->id
         ]);
-        //cari transaksi terakhir
+        
         $lastransaction = Transaction::where('distributor_id', $distributor->id)->orderBy('created_at', 'DESC')->first();
-        foreach($request->product_id as $arraynum=>$p_id){
-                $datadistri[$request->product_id[$arraynum]] = ['stock' => $request->stock[$arraynum]];
-                $datatrans[$request->product_id[$arraynum]] = ['qta' => $request->qty[$arraynum]];
+
+        for ($i = 0; $i < count($request->product_id); $i++) {
+            $datadistri[$request->product_id[$i]] = ['stock' => $request->stock[$i]-$request->qty[$i]];
+            $datatrans[$request->product_id[$i]] = ['qta' => $request->qty[$i]];
         }
-        $distributor->product()->sync($datadistri);
+        $distributor->product()->syncWithoutDetaching($datadistri);
         $lastransaction->product()->sync($datatrans);
         Alert::success('Transaksi Berhasil', 'Sukses');
         return redirect()->route('transaction.index');

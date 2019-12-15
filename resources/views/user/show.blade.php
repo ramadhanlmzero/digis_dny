@@ -1,16 +1,25 @@
 @section('title')
-    Data User
+    Profil
 @endsection
 @extends('layouts.app')
 
 @section('content')
 <div class="mb-4">
-    <a href="{{ route('user.edit', $user->id) }}">
-        <button type="button" class="btn btn-success">Ubah Data</button>
-    </a>
-    <a href="{{ route('user.reset', $user->id) }}" class="ml-2">
-        <button type="button" class="btn btn-warning">Ubah Password</button>
-    </a>
+    @if(Auth::user()->role=='Distributor')
+        <a href="{{ route('profile.edit', $user->id) }}">
+            <button type="button" class="btn btn-success">Ubah Data</button>
+        </a>
+        <a href="{{ route('profile.reset', $user->id) }}" class="ml-2">
+            <button type="button" class="btn btn-warning">Ubah Password</button>
+        </a>
+    @elseif(Auth::user()->role=='Admin')
+        <a href="{{ route('user.edit', $user->id) }}">
+            <button type="button" class="btn btn-success">Ubah Data</button>
+        </a>
+        <a href="{{ route('user.reset', $user->id) }}" class="ml-2">
+            <button type="button" class="btn btn-warning">Ubah Password</button>
+        </a>
+    @endif
 </div>
 
 <div class="row">
@@ -147,7 +156,49 @@
                                         <p>Belum ada produk</p>
                                     @endif
                                 </div>
-                                <div class="tab-pane fade" id="transaction" role="tabpanel" aria-labelledby="transaction-tab">...</div>
+                                <div class="tab-pane fade" id="transaction" role="tabpanel" aria-labelledby="transaction-tab">
+                                    <p class="font-weight-bold">
+                                        Total Transaksi : {{ $distributor->transaction->count() }}
+                                    </p>
+                                    <p class="font-weight-bold">
+                                        Riwayat Transaksi :
+                                    </p>
+                                    @if (!$distributor->transaction->isEmpty())
+                                        <ol type="1" class="pl-3">
+                                            @foreach ($distributor->transaction as $transaction)
+                                            <p>
+                                                <li>
+                                                    <p class="my-0">
+                                                        {{ \Carbon\Carbon::parse($transaction->created_at, 'Asia/Jakarta')->formatLocalized('%d %B %Y') }}
+                                                    </p>
+                                                    <p class="my-0">
+                                                        Total Belanjaan: 
+                                                        @php
+                                                            $qta = 0;
+                                                            foreach($transaction->product as $product) {
+                                                                $qta += $product->pivot->qta;
+                                                            }
+                                                        @endphp
+                                                        {{ $qta }}
+                                                    </p>
+                                                    <p class="my-0">
+                                                        Jenis Produk: 
+                                                        <ol type="a" class="pl-3">
+                                                            @foreach($transaction->product as $index => $product)
+                                                                <li>
+                                                                    {{ $product->title }}: {{ $product->pivot->qta }} buah
+                                                                </li>
+                                                            @endforeach
+                                                        </ol>
+                                                    </p>
+                                                </li>
+                                            </p>
+                                            @endforeach
+                                        </ol> 
+                                    @else 
+                                        <p>Belum ada transaksi</p>
+                                    @endif
+                                </div>
                             </div>
                         </section>
                     </div>

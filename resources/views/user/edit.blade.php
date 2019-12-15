@@ -74,7 +74,7 @@
     @if ($user->role == 'Distributor')
         <div class="col-md-6 stretch-card">
             <div class="card">
-                <form action="{{ route('user.update', $user->id) }}" method="post" enctype="multipart/form-data">
+                <form action="{{ route('profile.update', $user->id) }}" method="post" enctype="multipart/form-data">
                     {{ method_field('put') }}
                     {{ csrf_field() }}
                     <div class="card-header">
@@ -135,15 +135,6 @@
                                 </span>
                             @enderror
                         </div>
-                        {{-- <div class="form-group @error('address') has-error @enderror">
-                            <label for="address">Alamat Lengkap</label>
-                            <textarea name="address" id="address" cols="30" rows="3" class="form-control" required>{{ $user->distributor->address }}</textarea>
-                            @error('address')
-                                <span class="form-text text-danger">
-                                    {{ $message }}
-                                </span>
-                            @enderror
-                        </div> --}}
                         <div class="form-group @error('gender') has-error @enderror">
                             <label for="gender">Jenis Kelamin</label>
                             <select class="form-control" id="gender" name="gender">
@@ -248,6 +239,68 @@
                 </div>
             </div>
         </div>
+        @section('js')
+            <script>
+                function initMap() {
+                    var lat = {!! json_encode($lat, JSON_HEX_TAG) !!};
+                    var long = {!! json_encode($long, JSON_HEX_TAG) !!};
+                    var input = document.getElementById('address');
+                    var autocomplete = new google.maps.places.Autocomplete(input);
+                    autocomplete.bindTo('bounds', maps[0].map);
+
+                    autocomplete.setFields(
+                    ['address_components', 'geometry', 'icon', 'name']);
+
+                    var infowindow = new google.maps.InfoWindow();
+                    var infowindowContent = document.getElementById('infowindow-content');
+                    infowindow.setContent(infowindowContent);
+                    var markerPosition = new google.maps.LatLng(lat, long);
+                    var marker = new google.maps.Marker({
+                        position: markerPosition,
+                    });
+                    marker.setMap(maps[0].map);
+
+                    autocomplete.addListener('place_changed', function() {
+                        var place = autocomplete.getPlace();
+                        
+                        if (!place.geometry) {
+                            window.alert("No details available for input: '" + place.name + "'");
+                            return;
+                        }
+
+                        if (place.geometry.viewport) {
+                            maps[0].map.fitBounds(place.geometry.viewport);
+                        } 
+                        else {
+                            maps[0].map.setCenter(place.geometry.location);
+                            maps[0].map.setZoom(17);
+                        }
+                        marker.setPosition(place.geometry.location);
+                        marker.setVisible(true);
+
+                        var address = '';
+                        if (place.address_components) {
+                            address = [
+                            (place.address_components[0] && place.address_components[0].short_name || ''),
+                            (place.address_components[1] && place.address_components[1].short_name || ''),
+                            (place.address_components[2] && place.address_components[2].short_name || '')
+                            ].join(' ');
+                        }
+
+                        infowindowContent.children['place-icon'].src = place.icon;
+                        infowindowContent.children['place-name'].textContent = place.name;
+                        infowindowContent.children['place-address'].textContent = address;
+                        infowindow.open(maps[0].map, marker);
+                        
+                        document.getElementById('lat').value = place.geometry.location.lat();
+                        document.getElementById('long').value = place.geometry.location.lng();
+                        document.getElementById('lat2').value = place.geometry.location.lat();
+                        document.getElementById('long2').value = place.geometry.location.lng();
+                    });
+                }
+                google.maps.event.addDomListener(window, 'load', initMap);
+            </script>
+        @endsection
     @endif
 </div>
 @endsection
@@ -265,63 +318,5 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
-        function initMap() {
-            var lat = {!! json_encode($lat, JSON_HEX_TAG) !!};
-            var long = {!! json_encode($long, JSON_HEX_TAG) !!};
-            var input = document.getElementById('address');
-            var autocomplete = new google.maps.places.Autocomplete(input);
-            autocomplete.bindTo('bounds', maps[0].map);
-
-            autocomplete.setFields(
-            ['address_components', 'geometry', 'icon', 'name']);
-
-            var infowindow = new google.maps.InfoWindow();
-            var infowindowContent = document.getElementById('infowindow-content');
-            infowindow.setContent(infowindowContent);
-            var markerPosition = new google.maps.LatLng(lat, long);
-            var marker = new google.maps.Marker({
-                position: markerPosition,
-            });
-            marker.setMap(maps[0].map);
-
-            autocomplete.addListener('place_changed', function() {
-                var place = autocomplete.getPlace();
-                
-                if (!place.geometry) {
-                    window.alert("No details available for input: '" + place.name + "'");
-                    return;
-                }
-
-                if (place.geometry.viewport) {
-                    maps[0].map.fitBounds(place.geometry.viewport);
-                } 
-                else {
-                    maps[0].map.setCenter(place.geometry.location);
-                    maps[0].map.setZoom(17);
-                }
-                marker.setPosition(place.geometry.location);
-                marker.setVisible(true);
-
-                var address = '';
-                if (place.address_components) {
-                    address = [
-                    (place.address_components[0] && place.address_components[0].short_name || ''),
-                    (place.address_components[1] && place.address_components[1].short_name || ''),
-                    (place.address_components[2] && place.address_components[2].short_name || '')
-                    ].join(' ');
-                }
-
-                infowindowContent.children['place-icon'].src = place.icon;
-                infowindowContent.children['place-name'].textContent = place.name;
-                infowindowContent.children['place-address'].textContent = address;
-                infowindow.open(maps[0].map, marker);
-                
-                document.getElementById('lat').value = place.geometry.location.lat();
-                document.getElementById('long').value = place.geometry.location.lng();
-                document.getElementById('lat2').value = place.geometry.location.lat();
-                document.getElementById('long2').value = place.geometry.location.lng();
-            });
-        }
-        google.maps.event.addDomListener(window, 'load', initMap);
     </script>
 @endsection

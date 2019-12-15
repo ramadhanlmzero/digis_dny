@@ -1,10 +1,5 @@
 @section('title')
-
-    @if(Auth::user()->role=='Distributor')
-        Riwayat Transaksi
-    @elseif(Auth::user()->role=='Admin')
-        Data Transaksi
-    @endif
+    Buat Transaksi
 @endsection
 
 @extends('layouts.app')
@@ -14,9 +9,12 @@
     <div class="col-md-12">
         <div class="card">
         <form action="{{ route('transaction.store') }}" method="post" enctype="multipart/form-data">
-        @csrf
+            @csrf
+            @php
+                $total = 0;
+            @endphp
             <div class="card-header">
-                <div class="card-title">Tabel @yield('title')</div>
+                <div class="card-title">Ringkasan Pesanan</div>
             </div>
             <div class="card-body">
                 <table id="productTable" class="table table-bordered table-head-bg-info table-bordered-bd-info">
@@ -24,34 +22,41 @@
                         <tr>
                             <th width="30">No.</th>
                             <th>Nama Produk</th>
-                            <th>Harga pcs</th>
+                            <th>Harga</th>
                             <th>Jumlah</th>
-                            <th>Total</th>
+                            <th>Total Harga</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($product_id as $index => $product_id)
+                        @foreach ($products as $index => $product)
+                            <input type="hidden" name="product_id[]" value="{{ $product_id[$index] }}">
+                            <input type="hidden" name="qty[]" value="{{ $qty[$index] }}">
+                            @foreach ($product->distributor as $item)
+                                @if ($item->pivot->distributor_id == $distributor->id)
+                                <input type="hidden" name="stock[]" value="{{ $item->pivot->stock }}">
+                                @endif
+                            @endforeach
                             <tr>
-                                <input type="hidden" name="product_id[]" value="{{ $product_id }}">
-                                <input type="hidden" name="stock[]" value="{{ $stock[$index] }}">
-                                <input type="hidden" name="qty[]" value="{{ $qty[$index] }}">
                                 <td>{{ $index+1 }}</td>
-                                <td>{{ $title[$index] }}</td>
-                                <td>{{ $price[$index] }}</td>
+                                <td>{{ $product->title }}</td>
+                                <td>{{ $product->price }}</td>
                                 <td>{{ $qty[$index] }}</td>
-                                <td>Rp. {{ number_format($total[$index], 2, ',', '.') }}</td>
+                                <td>Rp. {{ number_format($product->price*$qty[$index], 2, ',', '.') }}</td>
                             </tr>
+                            @php
+                                $total += ($product->price*$qty[$index]);
+                            @endphp
                         @endforeach
                         <tr>
                             <th colspan="4">Total </th>
-                            <td>Rp. {{ number_format(array_sum($total), 2, ',', '.') }}</td>
+                            <td>Rp. {{ number_format($total, 2, ',', '.') }}</td>
                         </tr>
                     </tbody>
                 </table>
                     <div class="form-group @error('bayar') has-error @enderror">
                         <label for="bayar">Uang yg Dibayarkan</label>
-                        <input type="hidden" name="total" value="{{array_sum($total)}}">
-                        <input type="number" class="form-control" id="bayar" name="bayar" placeholder="contoh: joni" value="{{ old('bayar') }}" required min="{{array_sum($total)}}">
+                        <input type="hidden" name="total" value="{{ $total }}">
+                        <input type="number" class="form-control" id="bayar" name="bayar" value="{{ old('bayar') }}" required min="{{ $total }}">
                         @error('bayar')
                             <span class="form-text text-danger">
                                 {{ $message }}

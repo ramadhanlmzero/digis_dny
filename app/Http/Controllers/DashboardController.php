@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Mapper;
 use App\Model\Place;
 use App\Model\Distributor;
@@ -18,6 +17,8 @@ class DashboardController extends Controller
         $totalTransactions = Transaction::count();
         $totalProducts = Product::count();
 
+        $your = Distributor::where('user_id', Auth()->user()->id)->first();
+
         $places = Place::with('distributor')->orderBy('updated_at', 'DESC')->get();
         $distributors = Distributor::all();
         Mapper::location('Jawa Timur')->map(
@@ -27,6 +28,6 @@ class DashboardController extends Controller
                 'marker' => false
             ]
         );
-        return view('dashboard', compact('places', 'distributors', 'totalDistributors', 'totalPlaces', 'totalTransactions', 'totalProducts'));
+        return view('dashboard', compact('places', 'distributors', 'totalDistributors', 'totalPlaces', 'totalTransactions', 'totalProducts', 'your'));
     }
 }

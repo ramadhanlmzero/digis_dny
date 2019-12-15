@@ -105,7 +105,9 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::find($id);
-        $distributor = Distributor::where('user_id', $user->id)->first();
+        $distributor = Distributor::where('user_id', $user->id)->with(['transaction' => function ($query) {
+            $query->orderBy('created_at', 'DESC');
+        }])->first();
         return view('user.show', compact('user', 'distributor'));
     }
 
@@ -255,18 +257,6 @@ class UserController extends Controller
         }
         else {
             return redirect()->route('user.reset', $id)->with('error', 'Password lama anda salah!');
-        }
-    }
-
-    public function profile($id)
-    {
-        if (Auth::user()->id == $id || Auth::user()->role == 'Admin') {
-            $user = User::find($id);
-            $distributor = Distributor::where('user_id', $user->id)->first();
-            return view('user.show', compact('user', 'distributor'));
-        }
-        else {
-            return redirect()->route('dashboard');
         }
     }
 }
