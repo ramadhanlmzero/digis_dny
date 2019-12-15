@@ -23,13 +23,18 @@
             <div class="collapse in" id="collapseExample" aria-expanded="true" style="">
                 <ul class="nav">
                     <li>
-                        <a href="#profile">
+                        <a href="{{ route('user.profile', Auth::user()->id . "#about") }}">
                             <span class="link-collapse">Profil Saya</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#settings">
-                            <span class="link-collapse">Riwayat Akun</span>
+                        <a href="{{ route('user.profile', Auth::user()->id . "#product") }}">
+                            <span class="link-collapse">Stok Produk</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('user.profile', Auth::user()->id . "#transaction") }}">
+                            <span class="link-collapse">Riwayat Transaksi</span>
                         </a>
                     </li>
                 </ul>
@@ -46,7 +51,7 @@
         <li class="nav-item {{ setActive(['transaction*']) }}">
             <a href="{{ route('transaction.index') }}">
                 <i class="la la-comment"></i>
-                <p>Riwayat Transaksi</p>
+                <p>Data Transaksi</p>
             </a>
         </li>
         <li class="nav-item {{ setActive(['distributorproduct*']) }}">

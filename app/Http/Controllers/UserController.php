@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Grimzy\LaravelMysqlSpatial\Types\Point;
 use Alert;
+use Auth;
 use Mapper;
 use Carbon\Carbon;
 use App\User;
@@ -104,7 +105,8 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::find($id);
-        return view('user.show', compact('user'));
+        $distributor = Distributor::where('user_id', $user->id)->first();
+        return view('user.show', compact('user', 'distributor'));
     }
 
     /**
@@ -253,6 +255,18 @@ class UserController extends Controller
         }
         else {
             return redirect()->route('user.reset', $id)->with('error', 'Password lama anda salah!');
+        }
+    }
+
+    public function profile($id)
+    {
+        if (Auth::user()->id == $id || Auth::user()->role == 'Admin') {
+            $user = User::find($id);
+            $distributor = Distributor::where('user_id', $user->id)->first();
+            return view('user.show', compact('user', 'distributor'));
+        }
+        else {
+            return redirect()->route('dashboard');
         }
     }
 }

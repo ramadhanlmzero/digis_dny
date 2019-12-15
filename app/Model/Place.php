@@ -14,6 +14,6 @@ class Place extends Model
 
     public function distributor()
     {
-        return $this->hasMany(Distributor::class, 'place_id', 'id');
+        return $this->hasMany(Distributor::class, 'place_id', 'id')->with('transaction');
     }
 }

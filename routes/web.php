@@ -21,12 +21,13 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth'], function () {
         Route::match(['put', 'patch'], '/user/resetpassword/{id}', 'UserController@resetpassword')->name('user.resetpassword');
         Route::get('/user/{id}/reset', 'UserController@reset')->name('user.reset');
         Route::resource('distributor', 'DistributorController');
-        Route::resource('place', 'PlaceController');
         Route::resource('product', 'ProductController');
         Route::resource('distributorproduct', 'DistributorProductController');
     });
     Route::group(['middleware' => ['role:Admin,Distributor']], function () {
-        Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+        Route::resource('place', 'PlaceController');
+        Route::get('/', 'DashboardController@index')->name('dashboard');
+        Route::get('/profil/{id}', 'UserController@profile')->name('user.profile');
         Route::resource('transaction', 'TransactionController');
     });
 });
