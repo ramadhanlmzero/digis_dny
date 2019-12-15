@@ -35,7 +35,11 @@
     php artisan migrate
     ```
    
-8. Setelah itu program dapat dijalankan dengan mengetik pada terminal :
+8. Seed database dengan :
+    ```
+    php artisan db:seed
+    ```
+9. Setelah itu program dapat dijalankan dengan mengetik pada terminal :
     ```
     php artisan serve
     ```

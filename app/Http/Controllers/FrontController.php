@@ -10,4 +10,8 @@ class FrontController extends Controller
     {
         return redirect()->route('login');
     }
+    public function any($any)
+    {
+        return view('errors.404');
+    }
 }

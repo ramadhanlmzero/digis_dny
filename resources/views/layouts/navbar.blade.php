@@ -11,7 +11,7 @@
     <div class="container-fluid">
         <ul class="navbar-nav">
             <li class="nav-item dropdown d-none d-lg-flex">
-                <a href="#" class="nav-link nav-btn">
+                <a href="{{ route('transaction.create') }}" class="nav-link nav-btn">
                     <span class="btn btn-info btn-round">+ Buat Transaksi</span>
                 </a>
             </li>
@@ -19,7 +19,7 @@
         <ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
             <li class="nav-item dropdown">
                 <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
-                    @if(Auth::user()->photo)
+                    @if(Auth::user()->photo!=null)
                         @if(file_exists(public_path(). '/storage/user/'. Auth::user()->photo))
                             <img src="{{ asset('storage/user/'. Auth::user()->photo) }}" alt="user-img" width="30" height="30" class="img-circle">
                         @else
