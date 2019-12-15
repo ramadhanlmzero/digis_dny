@@ -67,11 +67,11 @@
                 <p>Data Kota Distributor</p>
             </a>
         </li>
-        <li class="nav-item {{ setActive(['user*']) }}">
+        {{-- <li class="nav-item {{ setActive(['user*']) }}">
             <a href="{{ route('user.index') }}">
                 <i class="la la-user"></i>
                 <p>Data User</p>
             </a>
-        </li>
+        </li> --}}
     </ul>
 </div>
