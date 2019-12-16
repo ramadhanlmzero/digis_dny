@@ -9,6 +9,7 @@
 </div>
 <nav class="navbar navbar-header navbar-expand-lg">
     <div class="container-fluid">
+        @if (Auth::user()->role == 'Distributor')
         <ul class="navbar-nav">
             <li class="nav-item dropdown d-none d-lg-flex">
                 <a href="{{ route('transaction.create') }}" class="nav-link nav-btn">
@@ -16,6 +17,7 @@
                 </a>
             </li>
         </ul>
+        @endif
         <ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
             <li class="nav-item dropdown">
                 <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">

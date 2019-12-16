@@ -117,7 +117,8 @@ class TransactionController extends Controller
      */
     public function show($id)
     {
-        //
+        $transactions = Transaction::find($id);
+        return view('transaction.show', compact('transactions'));
     }
 
     /**
