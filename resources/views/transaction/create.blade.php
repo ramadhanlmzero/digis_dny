@@ -121,7 +121,7 @@
         var distributor = {!! json_encode($distributor, JSON_HEX_TAG) !!};
         $.each(distributor.product, function( i, product ) {
             $('#order' + i).click(function (e) {
-                $('#input' + i).append('<input class="form-check-input" type="hidden" name="product_id[]" id="product_id' + i + '" value=' + product.id + ' style="display:none;"><input type="number" class="form-control form-control-sm col-5" id="qty' + i + '" name="qty[]" style="display:none;" disabled required>');
+                $('#input' + i).append('<input class="form-check-input" type="hidden" name="product_id[]" id="product_id' + i + '" value=' + product.id + ' style="display:none;"><input type="number" class="form-control form-control-sm col-5" id="qty' + i + '" name="qty[]" style="display:none;" disabled required min="1">');
                 if ($('#qty' + i).prop('disabled')) {
                     $('#qty' + i).prop('disabled', false);
                     $('#order' + i).html('Batal');
